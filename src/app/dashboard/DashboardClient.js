@@ -2,6 +2,7 @@
 import { useState, useEffect, Suspense } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import styles from "./dashboard.module.css";
 import { FaUserCircle, FaChevronDown } from "react-icons/fa";
@@ -153,14 +154,50 @@ export default function DashboardClient({ initialJobs = [] }) {
     return statusMap[status?.toLowerCase()] || status;
   };
 
-  const repairItems = jobs.map(job => ({
-    id: job._id,
-    device: job.title?.split(' - ')[0] || "Unknown",
-    model: job.title?.split(' - ')[1] || "",
-    issue: job.description,
-    date: new Date(job.createdAt).toISOString().split('T')[0],
-    status: mapStatus(job.status)
-  }));
+  const repairItems = jobs.map(job => {
+    // Debug: Log the entire job object to see what fields exist
+    console.log("Full job object:", JSON.stringify(job, null, 2));
+    
+    // Prioritize preferredDate over createdAt
+    let mappedDate;
+    const hasPreferredDate = job.preferredDate !== undefined && job.preferredDate !== null && job.preferredDate !== '';
+    
+    console.log("Date check:", {
+      id: job._id,
+      hasPreferredDate: hasPreferredDate,
+      preferredDateValue: job.preferredDate,
+      preferredDateType: typeof job.preferredDate,
+      createdAt: job.createdAt
+    });
+    
+    if (hasPreferredDate) {
+      try {
+        const dateObj = new Date(job.preferredDate);
+        if (!isNaN(dateObj.getTime())) {
+          mappedDate = dateObj.toISOString().split('T')[0];
+          console.log("Using preferred date:", mappedDate);
+        } else {
+          console.warn("Invalid preferred date, using createdAt");
+          mappedDate = new Date(job.createdAt).toISOString().split('T')[0];
+        }
+      } catch (e) {
+        console.error("Error parsing preferredDate:", e);
+        mappedDate = new Date(job.createdAt).toISOString().split('T')[0];
+      }
+    } else {
+      console.log("No preferred date found, using createdAt");
+      mappedDate = new Date(job.createdAt).toISOString().split('T')[0];
+    }
+    
+    return {
+      id: job._id,
+      device: job.title?.split(' - ')[0] || "Unknown",
+      model: job.title?.split(' - ')[1] || "",
+      issue: job.description,
+      date: mappedDate,
+      status: mapStatus(job.status)
+    };
+  });
 
   const localStats = {
     pending: repairItems.filter((item) => item.status === "Pending" || item.status === "Assigned").length,
@@ -181,10 +218,12 @@ export default function DashboardClient({ initialJobs = [] }) {
       <header className={styles.navbar}>
         <div className={`container ${styles.navInner}`}>
           <Link href="/dashboard" className={styles.brand}>
-            <img
+            <Image
               className={styles.logoImg}
               src="/images/logo.png"
               alt="Repairo logo"
+              width={40}
+              height={40}
             />
             <span>Repairo</span>
           </Link>

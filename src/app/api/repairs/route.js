@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongo";
 import Repair from "@/models/repair";
+import User from "@/models/user";
 import mongoose from "mongoose";
 
 export const dynamic = "force-dynamic";
@@ -49,6 +50,11 @@ export async function GET(request) {
       .lean();
 
     console.log("GET /api/repairs - Found items:", items.length, "Query:", JSON.stringify(query));
+    
+    // Log first item to verify preferredDate is included
+    if (items.length > 0) {
+      console.log("GET /api/repairs - First item preferredDate:", items[0].preferredDate);
+    }
 
     const response = NextResponse.json(items, { status: 200 });
     response.headers.set(
@@ -100,7 +106,9 @@ export async function POST(request) {
     }
 
     const body = await request.json();
-    const { title, description, status = "Pending" } = body;
+    const { title, description, status = "Pending", preferredDate } = body;
+
+    console.log("POST /api/repairs - Received preferredDate:", preferredDate);
 
     if (!title || !description) {
       return NextResponse.json(
@@ -114,13 +122,20 @@ export async function POST(request) {
       description,
       status,
       userId,
+      preferredDate: preferredDate ? new Date(preferredDate) : undefined,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
 
     await newRepair.save();
 
-    return NextResponse.json(newRepair, { status: 201 });
+    console.log("POST /api/repairs - Saved repair with preferredDate:", newRepair.preferredDate);
+
+    // Convert to plain object to ensure all fields are serialized properly
+    const repairObject = newRepair.toObject();
+    console.log("POST /api/repairs - Returning repair object:", repairObject);
+
+    return NextResponse.json(repairObject, { status: 201 });
   } catch (err) {
     console.error("Repairs POST error:", err);
     return NextResponse.json({ error: err.message }, { status: 500 });

@@ -21,7 +21,10 @@ export default function NewRepairRequest({ onSubmit: onSubmitCallback }) {
   
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (!form.deviceType || !form.model || !form.issue) return;
+    if (!form.deviceType || !form.model || !form.issue || !form.date) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
 
     setLoading(true);
     try {
@@ -36,6 +39,7 @@ export default function NewRepairRequest({ onSubmit: onSubmitCallback }) {
           title: `${form.deviceType} - ${form.model}`,
           description: form.issue,
           status: "Pending",
+          preferredDate: form.date,
         }),
       });
 
@@ -45,6 +49,8 @@ export default function NewRepairRequest({ onSubmit: onSubmitCallback }) {
       }
 
       const newRepair = await response.json();
+      console.log("NewRepairRequest - Created repair:", newRepair);
+      console.log("NewRepairRequest - preferredDate in response:", newRepair.preferredDate);
       toast.success("Repair request submitted successfully!");
       
       if (onSubmitCallback) {
@@ -109,16 +115,17 @@ export default function NewRepairRequest({ onSubmit: onSubmitCallback }) {
         </label>
 
         <label>
-          <span>Preferred Date</span>
+          <span>Preferred Date *</span>
           <input
             type="date"
             name="date"
             value={form.date}
             onChange={onChange}
             min={minDate}
+            required
           />
           <small style={{ color: "#64748b", fontSize: "0.875rem" }}>
-            Select a future date for your repair
+            Select your preferred date for the repair
           </small>
         </label>
 

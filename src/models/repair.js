@@ -34,6 +34,10 @@ const repairSchema = new mongoose.Schema(
       type: String,
       default: ""
     },
+    preferredDate: {
+      type: Date,
+      required: false
+    },
     createdAt: { 
       type: Date, 
       default: Date.now 

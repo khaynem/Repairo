@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import styles from "./messages.module.css";
@@ -12,33 +12,7 @@ export default function MessagesClient() {
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
 
-  useEffect(() => {
-    fetchConversations();
-    fetchCurrentUser();
-  }, []);
-
-  useEffect(() => {
-    if (activeRepairId) {
-      fetchMessages(activeRepairId);
-    }
-  }, [activeRepairId]);
-
-  async function fetchCurrentUser() {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch("/api/auth/profile", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setCurrentUser(data.user);
-      }
-    } catch (err) {
-      console.error("Error fetching user:", err);
-    }
-  }
-
-  async function fetchConversations() {
+  const fetchConversations = useCallback(async () => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
@@ -58,7 +32,33 @@ export default function MessagesClient() {
     } finally {
       setLoading(false);
     }
+  }, [activeRepairId]);
+
+  async function fetchCurrentUser() {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch("/api/auth/profile", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setCurrentUser(data.user);
+      }
+    } catch (err) {
+      console.error("Error fetching user:", err);
+    }
   }
+
+  useEffect(() => {
+    fetchConversations();
+    fetchCurrentUser();
+  }, [fetchConversations]);
+
+  useEffect(() => {
+    if (activeRepairId) {
+      fetchMessages(activeRepairId);
+    }
+  }, [activeRepairId]);
 
   async function fetchMessages(repairId) {
     try {

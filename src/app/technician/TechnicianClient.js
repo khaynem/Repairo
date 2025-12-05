@@ -201,7 +201,7 @@ export default function TechnicianClient({ initialJobs = [] }) {
                   <th>Device</th>
                   <th>Issue</th>
                   <th>Status</th>
-                  <th>Date</th>
+                  <th>Preferred Date</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -229,7 +229,7 @@ export default function TechnicianClient({ initialJobs = [] }) {
                       </td>
                       <td>{getStatusBadge(row.status)}</td>
                       <td className={styles.dateCell}>
-                        {row.createdAt ? new Date(row.createdAt).toLocaleDateString() : row.date}
+                        {row.preferredDate ? new Date(row.preferredDate).toLocaleDateString() : (row.createdAt ? new Date(row.createdAt).toLocaleDateString() : row.date)}
                       </td>
                       <td>
                         <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>

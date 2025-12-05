@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import dynamic from "next/dynamic";
 import styles from "./messages.module.css";
 import techStyles from "../technician.module.css";
@@ -33,7 +33,7 @@ export default function TechnicianMessagesContent() {
   const [loading, setLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
 
-  const fetchConversations = async () => {
+  const fetchConversations = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
@@ -62,7 +62,7 @@ export default function TechnicianMessagesContent() {
     } catch (err) {
       console.error("Error fetching conversations:", err);
     }
-  };
+  }, [activeRepairId]);
 
   const fetchMessages = async (repairId) => {
     try {
@@ -106,7 +106,7 @@ export default function TechnicianMessagesContent() {
   useEffect(() => {
     fetchConversations();
     fetchCurrentUser();
-  }, []);
+  }, [fetchConversations]);
 
   useEffect(() => {
     if (activeRepairId) {
@@ -251,11 +251,6 @@ export default function TechnicianMessagesContent() {
                     <span className={styles.threadLast}>
                       {conv.lastMessage || "No messages"}
                     </span>
-                    {conv.unreadCount > 0 && (
-                      <span className={styles.unreadBadge}>
-                        {conv.unreadCount}
-                      </span>
-                    )}
                   </button>
                 </li>
               ))}

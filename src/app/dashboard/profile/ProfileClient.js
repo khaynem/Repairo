@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { toast } from "sonner";
 import styles from "./profile.module.css";
 
@@ -135,15 +136,15 @@ export default function ProfileClient() {
                 borderRadius: '50%',
                 overflow: 'hidden',
                 border: '4px solid #3b82f6',
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                position: 'relative'
               }}>
                 {avatarUrl ? (
-                  <img 
+                  <Image 
                     src={avatarUrl} 
                     alt="Profile Avatar" 
+                    fill
                     style={{ 
-                      width: '100%', 
-                      height: '100%', 
                       objectFit: 'cover' 
                     }} 
                   />

@@ -52,6 +52,18 @@ export default function AvailableRequestsClient() {
       if (response.ok) {
         const data = await response.json();
         console.log("Available jobs data:", data);
+        
+        // Log first item to check preferredDate
+        if (data.length > 0) {
+          console.log("First available job:", {
+            id: data[0]._id,
+            title: data[0].title,
+            preferredDate: data[0].preferredDate,
+            createdAt: data[0].createdAt,
+            hasPreferredDate: !!data[0].preferredDate
+          });
+        }
+        
         setAvailable(Array.isArray(data) ? data : []);
       } else {
         const error = await response.json();
@@ -153,21 +165,20 @@ export default function AvailableRequestsClient() {
                   <th>ID</th>
                   <th>Device</th>
                   <th>Issue</th>
-                  <th>Priority</th>
-                  <th>Posted</th>
+                  <th>Preferred Date</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>
+                    <td colSpan="5" style={{ textAlign: "center", padding: "20px" }}>
                       Loading available jobs...
                     </td>
                   </tr>
                 ) : available.length === 0 ? (
                   <tr>
-                    <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>
+                    <td colSpan="5" style={{ textAlign: "center", padding: "20px" }}>
                       No available jobs at the moment
                     </td>
                   </tr>
@@ -203,11 +214,8 @@ export default function AvailableRequestsClient() {
                       <td className={styles.issueCell}>
                         {r.description || r.issue}
                       </td>
-                      <td>{getPriorityBadge(r.priority || "medium")}</td>
                       <td className={styles.dateCell}>
-                        {r.createdAt
-                          ? new Date(r.createdAt).toLocaleDateString()
-                          : r.posted}
+                        {r.preferredDate ? new Date(r.preferredDate).toLocaleDateString() : (r.createdAt ? new Date(r.createdAt).toLocaleDateString() : r.posted)}
                       </td>
                       <td>
                         <button

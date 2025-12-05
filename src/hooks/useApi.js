@@ -14,29 +14,23 @@ export function useApi({
   onError,
 }) {
   const queryKey = [endpoint, method, params];
+  const isGetMethod = method === "GET";
 
-  if (method === "GET") {
-    const { data, isLoading, error, refetch } = useQuery({
-      queryKey,
-      queryFn: async () => {
-        return await RequestService.request(endpoint, {
-          method,
-          params,
-          withAuth,
-        });
-      },
-      enabled: enabled && !!endpoint,
-      staleTime,
-    });
+  // Always call useQuery, but disable it when not needed
+  const queryResult = useQuery({
+    queryKey,
+    queryFn: async () => {
+      return await RequestService.request(endpoint, {
+        method,
+        params,
+        withAuth,
+      });
+    },
+    enabled: isGetMethod && enabled && !!endpoint,
+    staleTime,
+  });
 
-    return {
-      data: data ?? null,
-      loading: isLoading,
-      error,
-      refetch,
-    };
-  }
-
+  // Always call useMutation, but only use it when not GET
   const mutation = useMutation({
     mutationFn: async () => {
       return await RequestService.request(endpoint, {
@@ -49,6 +43,16 @@ export function useApi({
     onSuccess,
     onError,
   });
+
+  // Return the appropriate result based on method
+  if (isGetMethod) {
+    return {
+      data: queryResult.data ?? null,
+      loading: queryResult.isLoading,
+      error: queryResult.error,
+      refetch: queryResult.refetch,
+    };
+  }
 
   return {
     data: mutation.data ?? null,
