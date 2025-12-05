@@ -29,6 +29,14 @@ const SECURITY_HEADERS = {
   "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
 };
 
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Allow-Credentials": "true",
+  "Access-Control-Max-Age": "86400",
+};
+
 /**
  * Verify JWT token using jose library
  * @param {string} token - JWT token to verify
@@ -76,6 +84,14 @@ function matchesRoute(pathname, routes) {
 export async function middleware(request) {
   const { pathname } = request.nextUrl;
 
+  // Handle CORS preflight requests
+  if (request.method === "OPTIONS") {
+    return new NextResponse(null, {
+      status: 200,
+      headers: CORS_HEADERS,
+    });
+  }
+
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/static") ||
@@ -86,6 +102,12 @@ export async function middleware(request) {
 
   const response = NextResponse.next();
 
+  // Add CORS headers to all responses
+  Object.entries(CORS_HEADERS).forEach(([key, value]) => {
+    response.headers.set(key, value);
+  });
+
+  // Add security headers
   Object.entries(SECURITY_HEADERS).forEach(([key, value]) => {
     response.headers.set(key, value);
   });

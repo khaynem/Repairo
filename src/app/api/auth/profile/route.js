@@ -3,11 +3,17 @@ import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongo";
 import User from "@/models/user";
 import bcrypt from 'bcryptjs';
+import { handleCors, corsHeaders } from "@/lib/cors";
 
 const { JWT_SECRET = "" } = process.env;
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+
+// Handle OPTIONS request for CORS preflight
+export async function OPTIONS(request) {
+  return handleCors(request);
+}
 
 export async function GET(request) {
   try {
@@ -52,10 +58,16 @@ export async function GET(request) {
       createdAt: user.createdAt
     };
     
-    return NextResponse.json({ user: safeUser }, { status: 200 });
+    return NextResponse.json({ user: safeUser }, { 
+      status: 200,
+      headers: corsHeaders(request.headers.get('origin'))
+    });
   } catch (err) {
     console.error('Profile error:', err);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    return NextResponse.json({ error: err.message }, { 
+      status: 500,
+      headers: corsHeaders(request.headers.get('origin'))
+    });
   }
 }
 
@@ -180,10 +192,15 @@ export async function PUT(request) {
       success: true,
       user: safeUser,
       message: 'Profile updated successfully'
+    }, {
+      headers: corsHeaders(request.headers.get('origin'))
     });
   } catch (err) {
     console.error('PUT /api/auth/profile error:', err);
     console.error('Error stack:', err.stack);
-    return NextResponse.json({ error: err.message || 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ error: err.message || 'Internal server error' }, { 
+      status: 500,
+      headers: corsHeaders(request.headers.get('origin'))
+    });
   }
 }
