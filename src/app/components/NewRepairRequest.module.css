@@ -1,0 +1,77 @@
+.card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.form input,
+.form select,
+.form textarea {
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.form input:focus,
+.form select:focus,
+.form textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.form textarea {
+  min-height: 100px;
+  max-height: 220px;
+  resize: vertical;
+}
+
+.submit {
+  background: var(--color-primary);
+  color: white;
+  padding: 10px 32%;
+  border: none;
+  border-radius: 10px;
+  box-shadow: var(--shadow-md);
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.submit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(37,99,235,0.25);
+  background: #1d4ed8;
+}
+
+.selectWrap {
+  position: relative;
+  width: 100%;
+}
+
+.select {
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: #fff;
+  padding-right: 34px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px 12px;
+}

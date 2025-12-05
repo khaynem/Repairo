@@ -1,0 +1,94 @@
+/* CSS variables moved to global stylesheet (src/app/globals.css) */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--overlay-bg);
+  z-index: 99999;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 20px 28px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  box-shadow: 0 8px 30px rgba(8, 10, 20, 0.2);
+  max-width: 420px;
+  width: 90%;
+}
+
+.spinner {
+  width: 72px;
+  height: 72px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ring {
+  width: 72px;
+  height: 72px;
+  transform-origin: center;
+  animation: rotate 1.6s linear infinite;
+}
+
+.ringBg {
+  fill: none;
+  stroke: rgba(0, 0, 0, 0.06);
+  stroke-width: 4;
+}
+
+.ringProgress {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: 126;
+  stroke-dashoffset: 94;
+  animation: dash 1.4s ease-in-out infinite;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dashoffset: 126;
+  }
+  50% {
+    stroke-dashoffset: 36;
+  }
+  100% {
+    stroke-dashoffset: 126;
+  }
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+}
+
+.text strong {
+  font-size: 16px;
+  color: rgba(17, 24, 39, 0.95);
+}
+
+.sub {
+  font-size: 13px;
+  color: rgba(55, 65, 81, 0.8);
+  margin-top: 6px;
+}

@@ -1,0 +1,203 @@
+.page {
+  min-height: 100vh;
+  background: var(--color-muted);
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  background: white;
+  box-shadow: var(--shadow-md);
+  z-index: 40;
+}
+
+.navInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  gap: 16px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  color: var(--color-foreground);
+}
+
+.logoImg {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: var(--shadow-md);
+  object-fit: cover;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 22px; /* space between nav items */
+}
+
+.navLinks a {
+  color: var(--color-foreground);
+  opacity: 0.9;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.navLinks a:hover {
+  background: #f3f4f6;
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.navLinks a.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
+  opacity: 1;
+}
+
+.navLinks a.active:hover {
+  background: linear-gradient(135deg, #5568d3 0%, #6a4190 100%);
+  color: white;
+  text-decoration: none;
+}
+
+.user {
+  position: relative;
+}
+
+.userBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  padding: 6px 10px;
+  border-radius: 999px;
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.userBtn:hover {
+  background: #f9fafb;
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.dropdown {
+  position: absolute;
+  right: 0;
+  margin-top: 6px;
+  background: white;
+  box-shadow: var(--shadow-md);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: 180px;
+}
+
+.dropdown button {
+  padding: 10px 12px;
+  border: none;
+  background: white;
+  text-align: left;
+}
+
+.dropdown button:hover {
+  background: #f3f4f6;
+}
+
+.main {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  padding: 16px 0;
+}
+
+@media (min-width: 980px) {
+  .main {
+    grid-template-columns: 0.3fr 0.7fr;
+  }
+}
+
+.left,
+.right {
+  min-width: 0;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+@media (min-width: 640px) {
+  .stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.stat {
+  background: #fff;
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-left: 4px solid transparent;
+  transition: transform 0.2s ease, box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.clickableStat {
+  cursor: pointer;
+}
+
+.clickableStat:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.clickableStat:active {
+  transform: translateY(0);
+}
+
+.activeStat {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  box-shadow: 0 0 0 2px var(--color-primary), 0 6px 16px rgba(37, 99, 235, 0.15);
+  transform: scale(1.02);
+}
+
+.activeStat:hover {
+  transform: scale(1.02) translateY(-2px);
+}
+
+.statLabel {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.statValue {
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--color-foreground);
+}
+
+.pending {
+  border-left-color: #f59e0b;
+}
+.inProgress {
+  border-left-color: #2563eb;
+}
+.completed {
+  border-left-color: #10b981;
+}
